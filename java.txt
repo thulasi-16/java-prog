@@ -1,0 +1,54 @@
+import java.util.HashMap;
+
+public class LinkShortener {
+    private HashMap<String, String> shortToLongMap;
+    private HashMap<String, String> longToShortMap;
+    private static final String BASE_URL = "http://short.en/";
+
+    public LinkShortener() {
+        shortToLongMap = new HashMap<>();
+        longToShortMap = new HashMap<>();
+    }
+
+    // Shorten a long URL
+    public String shortenURL(String longURL) {
+        if (longToShortMap.containsKey(longURL)) {
+            return BASE_URL + longToShortMap.get(longURL);
+        } else {
+            String shortKey = generateShortKey();
+            shortToLongMap.put(shortKey, longURL);
+            longToShortMap.put(longURL, shortKey);
+            return BASE_URL + shortKey;
+        }
+    }
+
+    // Expand a short URL to its original long URL
+    public String expandURL(String shortURL) {
+        String shortKey = shortURL.replace(BASE_URL, "");
+        if (shortToLongMap.containsKey(shortKey)) {
+            return shortToLongMap.get(shortKey);
+        } else {
+            return "Short URL not found!";
+        }
+    }
+
+    // Generate a unique short key (for simplicity, using a counter here)
+    private String generateShortKey() {
+        return String.valueOf(shortToLongMap.size() + 1);
+    }
+
+    public static void main(String[] args) {
+        LinkShortener linkShortener = new LinkShortener();
+
+        // Test the functionality
+        String longURL1 = "https://www.example.com/article/how-to-code";
+        String shortURL1 = linkShortener.shortenURL(longURL1);
+        System.out.println("Shortened URL 1: " + shortURL1);
+        System.out.println("Expanded URL 1: " + linkShortener.expandURL(shortURL1));
+
+        String longURL2 = "https://www.example.com/product/12345";
+        String shortURL2 = linkShortener.shortenURL(longURL2);
+        System.out.println("Shortened URL 2: " + shortURL2);
+        System.out.println("Expanded URL 2: " + linkShortener.expandURL(shortURL2));
+    }
+}
